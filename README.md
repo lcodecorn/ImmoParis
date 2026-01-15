@@ -51,6 +51,10 @@ The main application uses a Random Forest Regressor to predict property prices p
    ```
 
 4. **Prepare your data**
+
+   Data source: [Demandes de valeurs foncieres geolocalisees](https://www.data.gouv.fr/datasets/demandes-de-valeurs-foncieres-geolocalisees)  
+   
+   Please note that the data for this project was cleaned in Tableau; therefore, you will need to perform the cleaning yourself.
    
    Place your Excel data file (`BD_resultat_tableau.xlsx`) in the `Data/` directory. The application will automatically detect it using relative paths.
 
