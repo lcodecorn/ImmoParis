@@ -1,0 +1,146 @@
+# Paris Real Estate Analysis
+
+A Streamlit dashboard and Jupyter notebooks for exploring and modeling Paris real-estate transactions using machine learning.
+
+## 📋 Contents
+
+- **[src/app.py](src/app.py)** — Interactive Streamlit dashboard for model comparison and visualization
+- **[Notebooks/ml.ipynb](Notebooks/ml.ipynb)** — Machine learning experiments & feature importance analysis
+- **[Notebooks/dvf.ipynb](Notebooks/dvf.ipynb)** — Data exploration and DVF (Demandes de Valeurs Foncières) analysis
+- **[Data/](Data/)** — Raw and processed data files
+- **[requirements.txt](requirements.txt)** — Python dependencies
+
+## 🎯 Overview
+
+This project analyzes French property transaction data from Paris, computes key metrics (e.g., price per m²), and provides interactive visualizations and ML models to analyze price drivers across Paris arrondissements.
+
+The main application uses a Random Forest Regressor to predict property prices per square meter and provides comprehensive visualizations comparing predicted vs actual values.
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Python 3.10 or higher
+- pip (Python package manager)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <your-repo-url>
+   cd Immo
+   ```
+
+2. **Create and activate a virtual environment** (recommended)
+   
+   On Windows:
+   ```bash
+   python -m venv venv
+   venv\Scripts\activate
+   ```
+   
+   On macOS/Linux:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate
+   ```
+
+3. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Prepare your data**
+   
+   Place your Excel data file (`BD_resultat_tableau.xlsx`) in the `Data/` directory. The application will automatically detect it using relative paths.
+
+5. **Run the Streamlit app**
+   ```bash
+   streamlit run src/app.py
+   ```
+   
+   The app will automatically open in your browser at `http://localhost:8501`
+
+### Running Jupyter Notebooks
+
+If you want to explore the notebooks:
+
+```bash
+jupyter notebook Notebooks/
+```
+
+Or use JupyterLab:
+
+```bash
+jupyter lab Notebooks/
+```
+
+## 📁 Project Structure
+
+```
+Immo/
+├── src/
+│   ├── app.py              # Main Streamlit application
+│   ├── model.pkl           # Trained model (auto-generated if missing)
+│   └── preprocessor.pkl    # Data preprocessor (auto-generated if missing)
+├── Notebooks/
+│   ├── ml.ipynb            # ML experiments
+│   └── dvf.ipynb           # Data exploration
+├── Data/
+│   ├── BD_resultat_tableau.xlsx  # Main data file
+│   └── arrondissements.geojson   # Geographic data
+├── requirements.txt        # Python dependencies
+├── .gitignore             # Git ignore rules
+└── README.md              # This file
+```
+
+## 🔧 Features
+
+- **Interactive Dashboard**: Compare real vs predicted property prices
+- **Multiple Visualizations**: 
+  - Scatter plots (predictions vs actual)
+  - Error analysis (distribution, residuals)
+  - Analysis by postal code
+  - Time series analysis
+- **Filtering Options**: Filter by postal code, year, and error threshold
+- **Model Metrics**: R² score, MAE, RMSE, and more
+- **Export Functionality**: Download results as CSV
+
+## 📊 Model Details
+
+- **Algorithm**: Random Forest Regressor
+- **Target Variable**: Price per m² (`valeur_par_surface_bati`)
+- **Test Size**: 25%
+- **Features**: Postal code, date, transaction type, number of rooms, surface area, coordinates
+
+## 🛠️ Troubleshooting
+
+### Model not found error
+If you see a warning about the model not being found, the app will automatically train a new model. This is normal on first run or if model files are missing.
+
+### Data file not found
+Make sure `BD_resultat_tableau.xlsx` is placed in the `Data/` directory. The application uses relative paths, so it should work regardless of where you clone the repository.
+
+### Import errors
+Make sure all dependencies are installed:
+```bash
+pip install -r requirements.txt
+```
+
+## 📝 Notes
+
+- The application uses relative paths, making it portable across different systems
+- Model files (`.pkl`) are auto-generated if missing
+- Data files in the `Data/` directory are not tracked by git (add them manually if needed)
+
+## 🤝 Contributing
+
+Feel free to fork this project and submit pull requests for any improvements!
+
+## Author
+
+Léo Souris
+
+## 📄 License
+
+This project is open source and available under the MIT License.
