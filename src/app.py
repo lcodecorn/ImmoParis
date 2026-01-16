@@ -2,23 +2,18 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
-import os
 import plotly.express as px
 import plotly.graph_objects as go
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import warnings
 warnings.filterwarnings('ignore')
 
 # Page config
-st.set_page_config(page_title="Model Comparison - Real vs Predicted", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="Comparison - Real vs Predicted", layout="wide", initial_sidebar_state="expanded")
 
 # Title
-st.title("📊 Comparaison Modèle: Données Réelles vs Prédites")
+st.title("📊 Comparaison: Données Réelles vs Prédites")
 st.markdown("---")
 
 # Load and preprocess data (matching notebook exactly)
@@ -26,10 +21,9 @@ st.markdown("---")
 def load_and_preprocess_data():
     """Load and preprocess data exactly as in the notebook"""
     # Load Excel data
-    # Get the project root directory (parent of src/)
-    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    data_path = os.path.join(project_root, "Data", "BD_resultat_tableau.xlsx")
-    df = pd.read_excel(data_path)
+    path_to_file = ""
+    
+    df = pd.read_excel(path_to_file + "Immo/Data/BD_resultat_tableau.xlsx")
     
     # Filter data (matching notebook)
     df = df[df.type_local != "Maison"]
@@ -86,47 +80,8 @@ def load_model_and_preprocessor():
             # Any error (FileNotFoundError, AttributeError due to sklearn version, etc.)
             continue
 
-    # If we reach here, we couldn't safely load a model → trigger training path
+    # If we reach here, we couldn't safely load a model
     return None, None
-
-# Train model if not saved (fallback)
-@st.cache_resource
-def train_model(df_agg):
-    """Train model if not saved"""
-    # Split features and target
-    target = 'valeur_par_surface_bati'
-    x = df_agg.drop(columns=[target, 'valeur_fonciere'])
-    y = df_agg[target]
-    
-    # Split train/test
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25, random_state=42)
-    
-    # Separate numeric and categorical features
-    numeric_features = x.select_dtypes(include='number').columns
-    categoric_features = x.select_dtypes(exclude='number').columns
-    
-    # Preprocessing
-    ohe = OneHotEncoder(drop='first', sparse_output=False, handle_unknown='ignore')
-    sc = StandardScaler()
-    
-    preprocessor = ColumnTransformer([
-        ('cat', ohe, categoric_features),
-        ('num', sc, numeric_features)
-    ])
-    
-    # Fit and transform
-    x_train_processed = preprocessor.fit_transform(x_train)
-    x_test_processed = preprocessor.transform(x_test)
-    
-    # Train model
-    model = RandomForestRegressor(random_state=42)
-    model.fit(x_train_processed, y_train)
-    
-    # Make predictions
-    y_train_pred = model.predict(x_train_processed)
-    y_test_pred = model.predict(x_test_processed)
-    
-    return model, preprocessor, x_train, x_test, y_train, y_test, y_train_pred, y_test_pred
 
 # Generate comparison dataframe
 def create_comparison_df(x_test, y_test, y_test_pred):
@@ -165,22 +120,21 @@ st.sidebar.header("⚙️ Paramètres")
 
 # Check if model exists
 if model is None or preprocessor is None:
-    st.sidebar.warning("⚠️ Modèle non trouvé. Entraînement en cours...")
-    with st.spinner('Entraînement du modèle...'):
-        model, preprocessor, x_train, x_test, y_train, y_test, y_train_pred, y_test_pred = train_model(df_agg)
-    st.sidebar.success("✅ Modèle entraîné avec succès!")
-else:
-    st.sidebar.success("✅ Modèle chargé avec succès!")
-    # Need to recreate test split to get predictions
-    target = 'valeur_par_surface_bati'
-    x = df_agg.drop(columns=[target, 'valeur_fonciere'])
-    y = df_agg[target]
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25, random_state=42)
-    
-    # Transform and predict
-    x_test_processed = preprocessor.transform(x_test)
-    y_test_pred = model.predict(x_test_processed)
-    y_train_pred = model.predict(preprocessor.transform(x_train))
+    st.error("❌ Erreur: Modèle ou préprocesseur non trouvé. Veuillez vous assurer que les fichiers model.pkl et preprocessor.pkl existent dans le répertoire src/ ou à la racine du projet.")
+    st.stop()
+
+st.sidebar.success("✅ Modèle chargé avec succès!")
+
+# Need to recreate test split to get predictions
+target = 'valeur_par_surface_bati'
+x = df_agg.drop(columns=[target, 'valeur_fonciere'])
+y = df_agg[target]
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25, random_state=42)
+
+# Transform and predict
+x_test_processed = preprocessor.transform(x_test)
+y_test_pred = model.predict(x_test_processed)
+y_train_pred = model.predict(preprocessor.transform(x_train))
 
 # Create comparison dataframe
 results_df = create_comparison_df(x_test, y_test, y_test_pred)

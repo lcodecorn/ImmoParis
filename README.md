@@ -7,7 +7,7 @@ A Streamlit dashboard and Jupyter notebooks for exploring and modeling Paris rea
 - **[src/app.py](src/app.py)** — Interactive Streamlit dashboard for model comparison and visualization
 - **[Notebooks/ml.ipynb](Notebooks/ml.ipynb)** — Machine learning experiments & feature importance analysis
 - **[Notebooks/dvf.ipynb](Notebooks/dvf.ipynb)** — Data exploration and DVF (Demandes de Valeurs Foncières) analysis
-- **[Data/](Data/)** — Raw and processed data files
+- **[Data/](Data/)** — Data file
 - **[requirements.txt](requirements.txt)** — Python dependencies
 
 ## 🎯 Overview
@@ -27,7 +27,7 @@ The main application uses a Random Forest Regressor to predict property prices p
 
 1. **Clone the repository**
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/lcodecorn/ImmoParis
    cd Immo
    ```
 
@@ -53,10 +53,12 @@ The main application uses a Random Forest Regressor to predict property prices p
 4. **Prepare your data**
 
    Data source: [Demandes de valeurs foncieres geolocalisees](https://www.data.gouv.fr/datasets/demandes-de-valeurs-foncieres-geolocalisees)  
-   
+   Geojson Paris : [Frontière arrondissement](https://opendata.paris.fr/explore/dataset/arrondissements/download/?format=geojson)
+
+
    Please note that the data for this project was cleaned in Tableau; therefore, you will need to perform the cleaning yourself.
-   
-   Place your Excel data file (`BD_resultat_tableau.xlsx`) in the `Data/` directory. The application will automatically detect it using relative paths.
+
+   Place your Excel data file (`BD_resultat_tableau.xlsx`) in the `Data/` directory then replace path_to_file in every file you want execute
 
 5. **Run the Streamlit app**
    ```bash
@@ -91,11 +93,11 @@ Immo/
 │   ├── ml.ipynb            # ML experiments
 │   └── dvf.ipynb           # Data exploration
 ├── Data/
-│   ├── BD_resultat_tableau.xlsx  # Main data file
-│   └── arrondissements.geojson   # Geographic data
+│   └─── BD_resultat_tableau.xlsx  # Main data file
+│   
 ├── requirements.txt        # Python dependencies
-├── .gitignore             # Git ignore rules
-└── README.md              # This file
+├── .gitignore             
+└── README.md              
 ```
 
 ## 🔧 Features
@@ -117,14 +119,6 @@ Immo/
 - **Test Size**: 25%
 - **Features**: Postal code, date, transaction type, number of rooms, surface area, coordinates
 
-## 🛠️ Troubleshooting
-
-### Model not found error
-If you see a warning about the model not being found, the app will automatically train a new model. This is normal on first run or if model files are missing.
-
-### Data file not found
-Make sure `BD_resultat_tableau.xlsx` is placed in the `Data/` directory. The application uses relative paths, so it should work regardless of where you clone the repository.
-
 ### Import errors
 Make sure all dependencies are installed:
 ```bash
@@ -134,7 +128,7 @@ pip install -r requirements.txt
 ## 📝 Notes
 
 - The application uses relative paths, making it portable across different systems
-- Model files (`.pkl`) are auto-generated if missing
+- Model files (`.pkl`) are auto-generated if missing when running the `ml.ipynb` notebook
 - Data files in the `Data/` directory are not tracked by git (add them manually if needed)
 
 ## 🤝 Contributing
