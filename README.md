@@ -58,7 +58,7 @@ The main application uses a Random Forest Regressor to predict property prices p
 
    Please note that the data for this project was cleaned in Tableau; therefore, you will need to perform the cleaning yourself.
 
-   Place your Excel data file (`BD_resultat_tableau.xlsx`) in the `Data/` directory then replace path_to_file in every file you want execute
+   Place your Excel data file (`BD_resultat_tableau.xlsx`) in the `Data/` directory
 
 5. **Run the Streamlit app**
    ```bash

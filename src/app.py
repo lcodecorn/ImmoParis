@@ -7,6 +7,8 @@ import plotly.graph_objects as go
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import warnings
+import os
+
 warnings.filterwarnings('ignore')
 
 # Page config
@@ -20,10 +22,11 @@ st.markdown("---")
 @st.cache_data
 def load_and_preprocess_data():
     """Load and preprocess data exactly as in the notebook"""
-    # Load Excel data
-    path_to_file = ""
+    current_folder = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(current_folder)
+    xlsx_path = os.path.join(project_root, "Data", "BD_resultat_tableau.xlsx")
     
-    df = pd.read_excel(path_to_file + "Immo/Data/BD_resultat_tableau.xlsx")
+    df = pd.read_excel(xlsx_path)
     
     # Filter data (matching notebook)
     df = df[df.type_local != "Maison"]
