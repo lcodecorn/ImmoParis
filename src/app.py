@@ -129,7 +129,7 @@ st.sidebar.success("✅ Modèle chargé avec succès!")
 target = 'valeur_par_surface_bati'
 x = df_agg.drop(columns=[target, 'valeur_fonciere'])
 y = df_agg[target]
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25, random_state=42)
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25, random_state=42, stratify=df_agg["code_postal"])
 
 # Transform and predict
 x_test_processed = preprocessor.transform(x_test)
@@ -188,9 +188,8 @@ if filter_by_error:
 st.header("📊 Visualisations")
 
 # Tab layout
-tab1, tab2, tab3, tab4, tab5 = st.tabs([
+tab1, tab2, tab3, tab4 = st.tabs([
     "🎯 Prédictions vs Réel", 
-    "📉 Analyse des Erreurs", 
     "🗺️ Par Code Postal", 
     "📅 Par Période",
     "📋 Données Détaillées"
@@ -257,84 +256,9 @@ with tab1:
         st.metric("Erreur max", f"{results_df_filtered['abs_error'].max():.2f} €/m²")
         st.metric("Erreur min", f"{results_df_filtered['abs_error'].min():.2f} €/m²")
         st.metric("Erreur moyenne %", f"{results_df_filtered['abs_pct_error'].mean():.2f}%")
-        
-with tab2:
-    st.subheader("Analyse des Erreurs de Prédiction")
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        # Error distribution histogram
-        fig_hist = px.histogram(
-            results_df_filtered,
-            x='error',
-            nbins=50,
-            title='Distribution des Erreurs',
-            labels={'error': 'Erreur (€/m²)', 'count': 'Fréquence'},
-            color_discrete_sequence=['#FF6B6B']
-        )
-        fig_hist.add_vline(x=0, line_dash="dash", line_color="red", annotation_text="Erreur = 0")
-        fig_hist.update_layout(height=400)
-        st.plotly_chart(fig_hist, use_container_width=True)
-        
-        # Percentage error distribution
-        fig_pct = px.histogram(
-            results_df_filtered,
-            x='pct_error',
-            nbins=50,
-            title='Distribution des Erreurs en Pourcentage',
-            labels={'pct_error': 'Erreur (%)', 'count': 'Fréquence'},
-            color_discrete_sequence=['#4ECDC4']
-        )
-        fig_pct.add_vline(x=0, line_dash="dash", line_color="red", annotation_text="Erreur = 0%")
-        fig_pct.update_layout(height=400)
-        st.plotly_chart(fig_pct, use_container_width=True)
-    
-    with col2:
-        # Absolute error distribution
-        fig_abs = px.histogram(
-            results_df_filtered,
-            x='abs_error',
-            nbins=50,
-            title='Distribution des Erreurs Absolues',
-            labels={'abs_error': 'Erreur Absolue (€/m²)', 'count': 'Fréquence'},
-            color_discrete_sequence=['#95E1D3']
-        )
-        fig_abs.update_layout(height=400)
-        st.plotly_chart(fig_abs, use_container_width=True)
-        
-        # Box plot of errors
-        fig_box = px.box(
-            results_df_filtered,
-            y='error',
-            title='Boîte à Moustaches des Erreurs',
-            labels={'error': 'Erreur (€/m²)'},
-            color_discrete_sequence=['#F38181']
-        )
-        fig_box.add_hline(y=0, line_dash="dash", line_color="red")
-        fig_box.update_layout(height=400)
-        st.plotly_chart(fig_box, use_container_width=True)
-    
-    # Residuals plot
-    st.subheader("Graphique des Résidus")
-    fig_residuals = px.scatter(
-        results_df_filtered,
-        x='predicted_prix_m2',
-        y='error',
-        hover_data=['code_postal', 'annee_mois', 'actual_prix_m2'],
-        title='Résidus vs Prédictions',
-        labels={
-            'predicted_prix_m2': 'Prix prédit €/m²',
-            'error': 'Résidu (€/m²)'
-        },
-        color='abs_error',
-        color_continuous_scale='RdYlGn_r'
-    )
-    fig_residuals.add_hline(y=0, line_dash="dash", line_color="red", annotation_text="Résidu = 0")
-    fig_residuals.update_layout(height=500)
-    st.plotly_chart(fig_residuals, use_container_width=True)
 
-with tab3:
+
+with tab2:
     st.subheader("Analyse par Code Postal")
     
     # Aggregate by postal code
@@ -404,7 +328,7 @@ with tab3:
     postal_stats_display = postal_stats_display.round(2)
     st.dataframe(postal_stats_display.sort_values('Erreur Absolue Moyenne', ascending=False), use_container_width=True, hide_index=True)
 
-with tab4:
+with tab3:
     st.subheader("Analyse par Période")
     
     # Aggregate by period
@@ -477,7 +401,7 @@ with tab4:
     period_stats_display = period_stats_display.round(2)
     st.dataframe(period_stats_display, use_container_width=True, hide_index=True)
 
-with tab5:
+with tab4:
     st.subheader("Données Détaillées")
     
     # Display full dataframe
