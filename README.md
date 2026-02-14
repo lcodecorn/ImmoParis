@@ -2,14 +2,6 @@
 
 A Streamlit dashboard and Jupyter notebooks for exploring and modeling Paris real-estate transactions using machine learning.
 
-## 📋 Contents
-
-- **[src/app.py](src/app.py)** — Interactive Streamlit dashboard for model comparison and visualization
-- **[Notebooks/ml.ipynb](Notebooks/ml.ipynb)** — Machine learning experiments & feature importance analysis
-- **[Notebooks/dvf.ipynb](Notebooks/dvf.ipynb)** — Data exploration and DVF (Demandes de Valeurs Foncières) analysis
-- **[Data/](Data/)** — Data file
-- **[requirements.txt](requirements.txt)** — Python dependencies
-
 ## 🎯 Overview
 
 This project analyzes French property transaction data from Paris, computes key metrics (e.g., price per m²), and provides interactive visualizations and ML models to analyze price drivers across Paris arrondissements.
@@ -52,13 +44,9 @@ The main application uses a Random Forest Regressor to predict property prices p
 
 4. **Prepare your data**
 
-   Data source: [Demandes de valeurs foncieres geolocalisees](https://www.data.gouv.fr/datasets/demandes-de-valeurs-foncieres-geolocalisees)  
+   Appartements: [Demandes de valeurs foncieres geolocalisees](https://www.data.gouv.fr/datasets/demandes-de-valeurs-foncieres-geolocalisees)
+   Metro: [Lignes et stations de metro en France](https://www.data.gouv.fr/datasets/lignes-et-stations-de-metro-en-france)
    Geojson Paris : [Frontière arrondissement](https://opendata.paris.fr/explore/dataset/arrondissements/download/?format=geojson)
-
-
-   Please note that the data for this project was cleaned in Tableau; therefore, you will need to perform the cleaning yourself.
-
-   Place your Excel data file (`BD_resultat_tableau.xlsx`) in the `Data/` directory
 
 5. **Run the Streamlit app**
    ```bash
@@ -86,16 +74,31 @@ jupyter lab Notebooks/
 ```
 Immo/
 ├── src/
-│   ├── app.py              # Main Streamlit application
-│   ├── model.pkl           # Trained model (auto-generated if missing)
-│   └── preprocessor.pkl    # Data preprocessor (auto-generated if missing)
+│   ├──  app_dif_model.py  
+|   ├──  app.py         
+│   ├──  model_cat.pkl
+|   ├──  model_numpy.pkl
+|   ├──  model_random_forest.pkl
+|   ├──  numpy_models.py
+|   ├──  preprocessor_cat.pkl
+|   ├──  preprocessor_numpy.pkl
+│   └──  preprocessor_random_forest.pkl
 ├── Notebooks/
-│   ├── ml.ipynb            # ML experiments
-│   └── dvf.ipynb           # Data exploration
+│   ├──  dvf_vis.ipynb         
+│   ├──  ml.ipynb         
+|   ├──  ml-catboost.ipynb
+|   └──  ml_numpy.ipynb
 ├── Data/
-│   └─── BD_resultat_tableau.xlsx  # Main data file
-│   
-├── requirements.txt        # Python dependencies
+│   ├──  75_2021.csv
+|   ├──  75_2022.csv
+│   ├──  75_2023.csv
+|   ├──  75_2024.csv
+|   ├──  75_2025.csv
+|   ├──  metro-france.csv
+|   ├──  metro.csv
+|   └──  xp.csv
+|
+├── requirements.txt       
 ├── .gitignore             
 └── README.md              
 ```
@@ -107,17 +110,15 @@ Immo/
   - Scatter plots (predictions vs actual)
   - Error analysis (distribution, residuals)
   - Analysis by postal code
-  - Time series analysis
 - **Filtering Options**: Filter by postal code, year, and error threshold
 - **Model Metrics**: R² score, MAE, RMSE, and more
 - **Export Functionality**: Download results as CSV
 
 ## 📊 Model Details
 
-- **Algorithm**: Random Forest Regressor
-- **Target Variable**: Price per m² (`valeur_par_surface_bati`)
-- **Test Size**: 25%
-- **Features**: Postal code, date, transaction type, number of rooms, surface area, coordinates
+- **Algorithm**: Random Forest Regressor / Cat Boost Regressor / Numpy Random Forest Regressor
+- **Target Variable**: Price per m² (`price_per_sqrtm`)
+- **Test Size**: 20%
 
 ### Import errors
 Make sure all dependencies are installed:
@@ -128,12 +129,13 @@ pip install -r requirements.txt
 ## 📝 Notes
 
 - The application uses relative paths, making it portable across different systems
-- Model files (`.pkl`) are auto-generated if missing when running the `ml.ipynb` notebook
+- Model files (`.pkl`) are auto-generated chen running the model's notebook
 - Data files in the `Data/` directory are not tracked by git (add them manually if needed)
 
 ## 🤝 Contributing
 
 Feel free to fork this project and submit pull requests for any improvements!
+There is still some stuff to fix !
 
 ## Author
 

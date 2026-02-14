@@ -22,26 +22,20 @@ st.markdown("---")
 @st.cache_data
 def load_and_preprocess_data():
     """Load and preprocess data exactly as in the notebook"""
-    current_folder = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.dirname(current_folder)
-    xlsx_path = os.path.join(project_root, "Data", "BD_resultat_tableau.xlsx")
+    #current_folder = os.path.dirname(os.path.abspath(__file__))
+    #project_root = os.path.dirname(current_folder)
+    #xlsx_path = os.path.join(project_root, "Data", "BD_resultat_tableau.xlsx")
     
-    df = pd.read_excel(xlsx_path)
-    
-    # Filter data (matching notebook)
-    df = df[df.type_local != "Maison"]
-    df = df[df.nature_mutation != "Vente en l'état futur d'achèvement"]
-    
-    # Drop missing values
-    df = df.dropna(how='any', axis=0)
+    df = pd.read_csv("C:/Users/souri/Desktop/Immo/Data/xp.csv")
+    metro_df = pd.read_csv("C:/Users/souri/Desktop/Immo/Data/metro.csv")
     
     # Date processing
     df['date_mutation'] = pd.to_datetime(df['date_mutation'])
     df['annee_mois'] = df['date_mutation'].dt.to_period("M").astype(str)
     
     # Group by arrondissement for price per m²
-    df_agg = df.groupby(['code_postal', 'annee_mois', 'nature_mutation']).agg({
-        'valeur_par_surface_bati': 'mean',
+    df_agg = df.groupby(['code_postal', 'annee_mois']).agg({
+        'price_per_sqrtm': 'mean',
         'nombre_pieces_principales': 'mean',
         'surface_reelle_bati': 'mean',
         'valeur_fonciere': 'mean',
@@ -68,8 +62,8 @@ def load_model_and_preprocessor():
     scikit-learn version as your app environment.
     """
     possible_paths = [
-        ("src/model.pkl", "src/preprocessor.pkl"),
-        ("model.pkl", "preprocessor.pkl"),
+        ("src/model_random_forest.pkl", "src/preprocessor_random_forest.pkl"),
+        ("model_random_forest.pkl", "preprocessor_random_forest.pkl"),
     ]
 
     for model_path, prep_path in possible_paths:
@@ -94,7 +88,6 @@ def create_comparison_df(x_test, y_test, y_test_pred):
         'predicted_prix_m2': y_test_pred,
         'code_postal': x_test['code_postal'].values,
         'annee_mois': x_test['annee_mois'].values,
-        'nature_mutation': x_test['nature_mutation'].values if 'nature_mutation' in x_test.columns else None,
         'nombre_pieces_principales': x_test['nombre_pieces_principales'].values if 'nombre_pieces_principales' in x_test.columns else None,
         'surface_reelle_bati': x_test['surface_reelle_bati'].values if 'surface_reelle_bati' in x_test.columns else None,
         'longitude': x_test['longitude'].values if 'longitude' in x_test.columns else None,
@@ -129,7 +122,7 @@ if model is None or preprocessor is None:
 st.sidebar.success("✅ Modèle chargé avec succès!")
 
 # Need to recreate test split to get predictions
-target = 'valeur_par_surface_bati'
+target = 'price_per_sqrtm'
 x = df_agg.drop(columns=[target, 'valeur_fonciere'])
 y = df_agg[target]
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25, random_state=42, stratify=df_agg["code_postal"])
@@ -448,7 +441,7 @@ st.sidebar.markdown("""
 ---
 **ℹ️ À propos**
 - **Modèle:** Random Forest Regressor
-- **Cible:** Prix par m² (valeur_par_surface_bati)
+- **Cible:** Prix par m² (price_per_sqrtm)
 - **Données:** Transactions immobilières Paris
 - **Test Size:** 25%
 """)
