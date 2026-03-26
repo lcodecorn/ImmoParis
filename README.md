@@ -1,146 +1,134 @@
-# Paris Real Estate Analysis
+# ImmoParis – Prédiction des prix immobiliers à Paris
 
-A Streamlit dashboard and Jupyter notebooks for exploring and modeling Paris real-estate transactions using machine learning.
+Un projet Data Science complet pour analyser les transactions immobilières à Paris et prédire le prix au m² en combinant données DVF et informations sur la proximité des stations de métro.  
+Trois modèles sont comparés : **CatBoost**, **Random Forest sklearn** et **Random Forest “from scratch” en NumPy**.
 
-## 🎯 Overview
+---
 
-This project analyzes French property transaction data from Paris, computes key metrics (e.g., price per m²), and provides interactive visualizations and ML models to analyze price drivers across Paris arrondissements.
+## 🎯 Objectif
 
-The main application uses a Random Forest Regressor to predict property prices per square meter and provides comprehensive visualizations comparing predicted vs actual values.
+- Fournir une **estimation fiable des prix immobiliers à Paris**  
+- Identifier les **facteurs influençant le prix** (localisation, surface, accessibilité métro…)  
+- Permettre aux utilisateurs de **comparer plusieurs modèles** via un dashboard interactif
 
-## 🚀 Quick Start
+---
 
-### Prerequisites
+## 📊 Résumé des résultats
 
-- Python 3.10 or higher
-- pip (Python package manager)
+| Modèle          |  RMSE (€/m²)  |   MAE (€)   |   R²   |
+|-----------------|---------------|-------------|--------|
+| CatBoost        | 533.47        | 354.60      | 0.8990 |
+| Random Forest   | 515.76        | 363.18      | 0.9056 |
+| NumPy RF        | 687.54        | 545.14      | 0.8322 |
 
-### Installation
+**Insights clés :**
+- La localisation (arrondissement / cluster) est le facteur dominant  
+- La proximité du métro influence fortement le prix  
+- Les modèles non linéaires (CatBoost) capturent mieux les interactions complexes  
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/lcodecorn/ImmoParis
-   cd Immo
-   ```
+---
 
-2. **Create and activate a virtual environment** (recommended)
-   
-   On Windows:
-   ```bash
-   python -m venv venv
-   venv\Scripts\activate
-   ```
-   
-   On macOS/Linux:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate
-   ```
+## 🚀 Fonctionnalités principales
 
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
+- Téléchargement automatique des **données DVF et métro**  
+- Prétraitement et **feature engineering avancé** (KMeans, BallTree, agrégations)  
+- Comparaison de **3 modèles différents**  
+- Dashboard Streamlit interactif pour **visualiser les prédictions et comparer les modèles**  
+- Notebooks de référence pour explorer les données et comprendre la logique des modèles  
 
-4. **Prepare your data**
+---
 
-   Appartements: [Demandes de valeurs foncieres geolocalisees](https://www.data.gouv.fr/datasets/demandes-de-valeurs-foncieres-geolocalisees)
-   Metro: [Lignes et stations de metro en France](https://www.data.gouv.fr/datasets/lignes-et-stations-de-metro-en-france)
-   Geojson Paris : [Frontière arrondissement](https://opendata.paris.fr/explore/dataset/arrondissements/download/?format=geojson)
+## 📂 Contenu du projet
 
-5. **Run the Streamlit app**
-   ```bash
-   streamlit run src/app.py
-   ```
-   
-   The app will automatically open in your browser at `http://localhost:8501`
+- `src/run.py` : pipeline complet pour télécharger, nettoyer les données et entraîner les modèles  
+- `src/app.py` : dashboard Streamlit interactif  
+- `src/numpy_models.py` : implémentation Random Forest en NumPy  
+- `Data/` : fichiers CSV générés automatiquement (`xp.csv`, `metro.csv`)  
+- `Model/` : modèles entraînés et preprocessors (`.pkl`)  
+- `Notebooks/` : notebooks d’exploration et entraînement de référence  
+- `docs/` : screenshots et visualisations pour le README  
 
-### Running Jupyter Notebooks
+---
 
-If you want to explore the notebooks:
+## ⚙️ Prérequis
 
-```bash
-jupyter notebook Notebooks/
-```
+- Python `>=3.10`  
+- pip  
+---
 
-Or use JupyterLab:
+## 💻 Installation
+
+1. Créer un environnement virtuel :  
 
 ```bash
-jupyter lab Notebooks/
+python -m venv venv
+source venv/bin/activate   # Linux / Mac
+venv\Scripts\activate      # Windows
 ```
 
-## 📁 Project Structure
+## Installer les dépendances :
 
-```
-Immo/
-├── src/
-│   ├──  app_dif_model.py  
-|   ├──  app.py         
-│   ├──  model_cat.pkl
-|   ├──  model_numpy.pkl
-|   ├──  model_random_forest.pkl
-|   ├──  numpy_models.py
-|   ├──  preprocessor_cat.pkl
-|   ├──  preprocessor_numpy.pkl
-│   └──  preprocessor_random_forest.pkl
-├── Notebooks/
-│   ├──  dvf_vis.ipynb         
-│   ├──  ml.ipynb         
-|   ├──  ml-catboost.ipynb
-|   └──  ml_numpy.ipynb
-├── Data/
-│   ├──  75_2021.csv
-|   ├──  75_2022.csv
-│   ├──  75_2023.csv
-|   ├──  75_2024.csv
-|   ├──  75_2025.csv
-|   ├──  metro-france.csv
-|   ├──  metro.csv
-|   └──  xp.csv
-|
-├── requirements.txt       
-├── .gitignore             
-└── README.md              
-```
-
-## 🔧 Features
-
-- **Interactive Dashboard**: Compare real vs predicted property prices
-- **Multiple Visualizations**: 
-  - Scatter plots (predictions vs actual)
-  - Error analysis (distribution, residuals)
-  - Analysis by postal code
-- **Filtering Options**: Filter by postal code, year, and error threshold
-- **Model Metrics**: R² score, MAE, RMSE, and more
-- **Export Functionality**: Download results as CSV
-
-## 📊 Model Details
-
-- **Algorithm**: Random Forest Regressor / Cat Boost Regressor / Numpy Random Forest Regressor
-- **Target Variable**: Price per m² (`price_per_sqrtm`)
-- **Test Size**: 20%
-
-### Import errors
-Make sure all dependencies are installed:
 ```bash
 pip install -r requirements.txt
 ```
 
-## 📝 Notes
+## 🛠 Génération des données et entraînement des modèles
 
-- The application uses relative paths, making it portable across different systems
-- Model files (`.pkl`) are auto-generated chen running the model's notebook
-- Data files in the `Data/` directory are not tracked by git (add them manually if needed)
+```bash
+python src/run.py
+```
 
-## 🤝 Contributing
+Ce script exécute automatiquement :
 
-Feel free to fork this project and submit pull requests for any improvements!
-There is still some stuff to fix !
+1. Téléchargement et nettoyage des données (`prepare_data`)
+2. Feature engineering partagé (`build_features`)
+3. Entraînement CatBoost (`train_catboost`)
+4. Entraînement Random Forest sklearn (`train_random_forest`)
+5. Entraînement Random Forest NumPy (`train_numpy_rf`)
+(cette execution peut donc prendre un peu de temps ~15-20min)
 
-## Author
+## Fichiers générés :
 
-Léo Souris
+- Data/xp.csv (transactions pré-traitées)
+- Data/metro.csv (stations métro)
+- Model/*.pkl (modèles et preprocessors)
 
-## 📄 License
+## 🌐 Lancer le dashboard Streamlit
 
-This project is open source and available under the MIT License.
+```bash
+streamlit run src/app.py
+```
+- Choisir le modèle dans la sidebar
+- Visualiser les prédictions, erreurs et comparaisons
+- Filtrer par arrondissement ou distance métro (optionnel)
+
+## 📈 Visualisations
+
+Distribution des erreurs pour CatBoost :
+
+![Dashboard Streamlit CatBoost](docs/CatBoost.png)
+
+<img src="docs/CatBoost.png" alt="Prediction vs réel" width="600"/>
+
+---
+
+Distribution des erreurs pour RandomForest :
+
+![Dashboard Streamlit RandomForest](docs/RandomForest.png)
+
+<img src="docs/RandomForest.png" alt="Prediction vs réel" width="600"/>
+
+
+## 📚 Notebooks de référence
+jupyter lab Notebooks/
+- `dvf_vis.ipynb` : visualisations exploratoires
+- `load_clean.ipynb` : nettoyage et prétraitement
+- `ml_catboost.ipynb` : entraînement CatBoost
+- `ml_numpy.ipynb` : Random Forest NumPy
+- `ml.ipynb` : Random Forest sklearn
+
+## 💡 Prochaines étapes / améliorations possibles
+- Hyperparameter tuning et modèles supplémentaires (XGBoost, LightGBM)
+- Déploiement Cloud du dashboard Streamlit
+- Ajout d’autres features géographiques ou socio-économiques
+- Tests unitaires pour preprocessing et modèles

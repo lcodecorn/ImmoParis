@@ -6,3 +6,4 @@ streamlit
 openpyxl
 numpy
 catboost
+request
