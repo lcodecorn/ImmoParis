@@ -107,14 +107,14 @@ streamlit run src/app.py
 
 Distribution des erreurs pour CatBoost :
 
-![Dashboard Streamlit CatBoost](docs/CatBoost.png)
+![Dashboard Streamlit CatBoost](https://github.com/lcodecorn/ImmoParis/tree/main/docs/CatBoost.png)
 
 
 ---
 
 Distribution des erreurs pour RandomForest :
 
-![Dashboard Streamlit RandomForest](docs/RandomForest.png)
+![Dashboard Streamlit RandomForest](https://github.com/lcodecorn/ImmoParis/tree/main/docs/RandomForest.png)
 
 
 
