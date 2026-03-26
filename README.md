@@ -110,7 +110,6 @@ Distribution des erreurs pour CatBoost :
 ![Dashboard Streamlit CatBoost](https://github.com/lcodecorn/ImmoParis/blob/main/docs/CatBoost.jpg)
 
 
----
 
 Distribution des erreurs pour RandomForest :
 
