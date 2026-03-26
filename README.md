@@ -85,6 +85,7 @@ Ce script exécute automatiquement :
 3. Entraînement CatBoost (`train_catboost`)
 4. Entraînement Random Forest sklearn (`train_random_forest`)
 5. Entraînement Random Forest NumPy (`train_numpy_rf`)
+   
 (cette execution peut donc prendre un peu de temps ~15-20min)
 
 ## Fichiers générés :
@@ -108,7 +109,6 @@ Distribution des erreurs pour CatBoost :
 
 ![Dashboard Streamlit CatBoost](docs/CatBoost.png)
 
-<img src="docs/CatBoost.png" alt="Prediction vs réel" width="600"/>
 
 ---
 
@@ -116,7 +116,6 @@ Distribution des erreurs pour RandomForest :
 
 ![Dashboard Streamlit RandomForest](docs/RandomForest.png)
 
-<img src="docs/RandomForest.png" alt="Prediction vs réel" width="600"/>
 
 
 ## 📚 Notebooks de référence
